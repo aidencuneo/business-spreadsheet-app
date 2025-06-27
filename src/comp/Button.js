@@ -6,6 +6,7 @@ const ButtonS = styled.div`
     text-align: center;
     padding: 12px;
     user-select: none;
+    flex-grow: 1;
 `;
 
 export default p => {

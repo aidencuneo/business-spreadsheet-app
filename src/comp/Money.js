@@ -1,25 +1,27 @@
 import styled from 'styled-components';
-import { parseMoney, toAUD } from '../util/money';
+import { moneyToString, parseMoney, toAUD } from '../util/money';
 import { useState } from 'react';
 import { round } from '../util/util';
 
-const MoneyS = styled.span`
-    // font-size: 20px;
-    // font-weight: bold;
-    vertical-align: middle;
-`;
-
 export default p => {
     const [value, currency] = parseMoney(p.value);
-    const sign = value < 0 ? '-' : '';
+    console.log(p.value);
 
-    const [money, setMoney] = useState(`${sign}$${Math.abs(value)}`);
+    const [money, setMoney] = useState(moneyToString(value, currency));
+    const [lastValue, setLastValue] = useState();
 
-    if (currency != 'AUD' && !money.endsWith(`${currency})`)) {
-        toAUD([value, currency]).then(aud =>
-            setMoney(`${sign}$${round(Math.abs(aud), 2)} (${money} ${currency})`),
-        );
+    if (lastValue != value) {
+        setMoney(moneyToString(value, currency));
+        setLastValue(value);
+
+        if (currency != 'AUD') {
+            toAUD([value, currency]).then(aud =>
+                setMoney(`${moneyToString(aud)} (${moneyToString(value, currency)})`),
+            );
+        }
     }
 
-    return <MoneyS style={p.style}>{money}</MoneyS>;
+    // console.log('got', value, currency, money);
+
+    return <span style={p.style}>{money}</span>;
 };

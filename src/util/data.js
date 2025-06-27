@@ -63,7 +63,11 @@ export function addTransaction(cat, money, desc) {
 }
 
 export async function sumTotal(cat) {
-    const transactions = getTransactions(cat);
+    let transactions = getTransactions(cat);
+
+    if (!Array.isArray(transactions))
+        transactions = Object.values(transactions).flat();
+
     let sum = 0;
 
     for (let i = 0; i < transactions.length; ++i) {

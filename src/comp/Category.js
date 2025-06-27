@@ -31,15 +31,30 @@ export default p => {
         if (!confirm('Are you sure you want to delete this transaction?'))
             return;
 
-        setTransactions(transactions.splice(i, 1));
+        const filtered = transactions.filter((t, j) => j != i);
+
+        setTransactions(filtered);
+        data.saveTransactions(p.name, filtered);
+    }
+
+    const renameTransaction = i => {
+        const name = (prompt('Enter a new name for this transaction:') ?? '').trim();
+
+        if (!name)
+            return;
+
+        const transactions = data.getTransactions(p.name);
+        transactions[i][1] = name;
+
+        setTransactions(transactions);
         data.saveTransactions(p.name, transactions);
     }
 
     const colour = getLightOrDark(p.colour.substring(1), '#eeeeee', '#121212');
     const [opened, setOpened] = useState(false);
     const [transactions, setTransactions] = useState(data.getTransactions(p.name));
-    const [total, setTotal] = useState(0);
-    console.log(transactions);
+    const [total, setTotal] = useState(undefined);
+    // console.log(p.name, transactions);
 
     data.sumTotal(p.name).then(setTotal);
 
@@ -78,8 +93,8 @@ export default p => {
                         }}
                     >
                         <div>
-                            <DeleteIcon onClick={e => { e.stopPropagation(); deleteTransaction(i); }} />
-                            <span>{t[1] ? t[1] : 'Unnamed Transaction'}</span>
+                            <DeleteIcon onClick={e => { e.stopPropagation(); deleteTransaction(transactions.length - i - 1); }} />
+                            <span onClick={() => renameTransaction(transactions.length - i - 1)}>{t[1] ? t[1] : 'Unnamed Transaction'}</span>
                         </div>
                         <div>
                             <Money value={t[0]} style={{ paddingRight: '10px' }} />

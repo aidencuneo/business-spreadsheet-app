@@ -8,10 +8,10 @@ import Button from './comp/Button';
 import { getRandColour } from './util/colourUtil';
 import { useState } from 'react';
 import styled from 'styled-components';
+import Money from './comp/Money';
 
-const Space = styled.div`
-    height: 100%;
-    background: #121212;
+const Flex = styled.div`
+    display: flex;
 `;
 
 function App() {
@@ -36,6 +36,9 @@ function App() {
     }
 
     const [cats, setCats] = useState(data.getCategories());
+    const [total, setTotal] = useState();
+
+    data.sumTotal().then(setTotal);
 
     // const cats = [
     //     ['Steam', getRandColour()],
@@ -44,15 +47,19 @@ function App() {
     // ];
 
     return <>
-        <Button colour="#eeeeee">Total: $5</Button>
+        <Button colour="#eeeeee">Total: <Money value={total} /></Button>
         {/* <TotalCategory key={i} name={cat[0]} colour={cat[1]} /> */}
 
         {cats.map((cat, i) =>
-            <Category key={i} name={cat[0]} colour={cat[1]} onDelete={deleteCat} />
+            <Category key={cat[0]} name={cat[0]} colour={cat[1]} onDelete={deleteCat} />
         )}
 
         <Button colour="#eeeeee" onClick={addCat}>New Category</Button>
-        <Space />
+
+        <Flex>
+            <Button colour="#a9d4ff" onClick={() => 0}>Import Data</Button>
+            <Button colour="#00ff78" onClick={() => 0}>Export Data</Button>
+        </Flex>
     </>;
 }
 

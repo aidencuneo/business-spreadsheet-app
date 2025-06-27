@@ -6,6 +6,8 @@ const isMoneyChar = (c) => c >= '0' && c <= '9' || c == '.' || c == '-';
 export function parseMoney(money) {
     if (Array.isArray(money))
         return money;
+    else if (typeof money === 'number')
+        return [money, 'AUD'];
     else if (typeof money !== 'string')
         return [0, 'AUD'];
 
@@ -17,7 +19,7 @@ export function parseMoney(money) {
     for (; i < money.length && isMoneyChar(money[i]); ++i)
         value += money[i];
 
-    for (; i < money.length; ++i)
+    for (; i < money.length && money[i] != ' '; ++i)
         currency += money[i];
 
     if (!currency)
@@ -28,8 +30,15 @@ export function parseMoney(money) {
 
 export async function toAUD(money) {
     const [value, currency] = parseMoney(money);
-    console.log('passed:', value, currency);
     const res = await fetch(`https://aidenbc.com.au/api/currency/${currency}/${value}`);
 
     return await res.json();
+}
+
+export function moneyToString(value, currency) {
+    const sign = value < 0 ? '-' : '';
+    currency ??= 'AUD';
+    currency = currency == 'AUD' ? '' : ` ${currency}`;
+
+    return `${sign}$${round(Math.abs(value), 2)}${currency}`;
 }
