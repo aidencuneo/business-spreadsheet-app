@@ -7,6 +7,12 @@ import Category from './comp/Category';
 import Button from './comp/Button';
 import { getRandColour } from './util/colourUtil';
 import { useState } from 'react';
+import styled from 'styled-components';
+
+const Space = styled.div`
+    height: 100%;
+    background: #121212;
+`;
 
 function App() {
     function addCat() {
@@ -22,6 +28,9 @@ function App() {
     }
 
     function deleteCat(p) {
+        if (!confirm(`Are you sure you want to delete "${p.name}"?`))
+            return;
+
         const cats = data.removeCategory(p.name);
         setCats(cats);
     }
@@ -43,6 +52,7 @@ function App() {
         )}
 
         <Button colour="#eeeeee" onClick={addCat}>New Category</Button>
+        <Space />
     </>;
 }
 

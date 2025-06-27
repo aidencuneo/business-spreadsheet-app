@@ -1,8 +1,14 @@
-import { round } from "./util";
+import { round } from './util';
+import { Convert } from 'easy-currencies';
 
 const isMoneyChar = (c) => c >= '0' && c <= '9' || c == '.' || c == '-';
 
 export function parseMoney(money) {
+    if (Array.isArray(money))
+        return money;
+    else if (typeof money !== 'string')
+        return [0, 'AUD'];
+
     money = money.replace(/\$/g, '').trim();
     let value = '';
     let currency = '';
@@ -17,5 +23,13 @@ export function parseMoney(money) {
     if (!currency)
         currency = 'AUD';
 
-    return [round(value, 2), currency.toUpperCase()];
+    return [round(value, 2), currency.trim().toUpperCase()];
+}
+
+export async function toAUD(money) {
+    const [value, currency] = parseMoney(money);
+    console.log('passed:', value, currency);
+    const res = await fetch(`https://aidenbc.com.au/api/currency/${currency}/${value}`);
+
+    return await res.json();
 }

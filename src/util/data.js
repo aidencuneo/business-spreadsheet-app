@@ -1,3 +1,5 @@
+import { toAUD } from "./money";
+
 const asID = cat => cat.toLowerCase();
 
 export function saveCategories(categories) {
@@ -36,7 +38,7 @@ export function getTransactions(cat) {
     const all = JSON.parse(localStorage.getItem('business_spreadsheet_transactions') ?? '[]');
 
     if (cat)
-        return all[asID(cat)];
+        return all[asID(cat)] ?? [];
 
     return all;
 }
@@ -50,4 +52,28 @@ export function saveTransactions(cat, transactions) {
         ...getTransactions(),
         [asID(cat)]: transactions,
     }));
+}
+
+export function addTransaction(cat, money, desc) {
+    const transactions = getTransactions(cat);
+    transactions.push(desc ? [money, desc] : [money]);
+    saveTransactions(cat, transactions);
+
+    return transactions;
+}
+
+export async function sumTotal(cat) {
+    const transactions = getTransactions(cat);
+    let sum = 0;
+
+    for (let i = 0; i < transactions.length; ++i) {
+        let [value, currency] = transactions[i][0];
+
+        if (currency != 'AUD')
+            value = await toAUD([value, currency]);
+
+        sum += value;
+    }
+
+    return sum;
 }

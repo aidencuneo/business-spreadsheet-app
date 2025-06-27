@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-const Icon = styled.span`
+export default styled.span`
     font-family: 'Material Icons';
     font-weight: normal;
     font-style: normal;
@@ -14,5 +14,3 @@ const Icon = styled.span`
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
 `;
-
-export default Icon;
