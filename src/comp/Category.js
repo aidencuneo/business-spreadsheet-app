@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getLightOrDark } from '../util/colourUtil';
+import { getLightOrDark, getRandColour } from '../util/colourUtil';
 import Icon from './Icon';
 import DeleteIcon from './DeleteIcon';
 import ExpandIcon from './ExpandIcon';
@@ -8,6 +8,8 @@ import { useState } from 'react';
 import Button from './Button';
 import * as data from '../util/data';
 import { parseMoney, toAUD } from '../util/money';
+import MoveIcon from './MoveIcon';
+import RefreshIcon from './RefreshIcon';
 
 const CategoryWrapper = styled.div`
     display: flex;
@@ -53,7 +55,7 @@ export default p => {
     const colour = getLightOrDark(p.colour.substring(1), '#eeeeee', '#121212');
     const [opened, setOpened] = useState(false);
     const [transactions, setTransactions] = useState(data.getTransactions(p.name));
-    const [total, setTotal] = useState(undefined);
+    const [total, setTotal] = useState();
     // console.log(p.name, transactions);
 
     data.sumTotal(p.name).then(setTotal);
@@ -65,7 +67,10 @@ export default p => {
         >
             <div>
                 <DeleteIcon onClick={e => { e.stopPropagation(); p.onDelete(p); }} />
-                <span>{p.name}</span>
+                <MoveIcon onClick={e => { e.stopPropagation(); p.onMoveUp(p) }} type="up" />
+                <MoveIcon onClick={e => { e.stopPropagation(); p.onMoveDown(p) }} type="down" />
+                <RefreshIcon onClick={e => { e.stopPropagation(); p.onRefresh(p); }} style={{ paddingRight: '15px' }} />
+                <span onClick={e => { e.stopPropagation(); p.onRename(p); }}>{p.name}</span>
             </div>
             <div>
                 <Money value={total} />

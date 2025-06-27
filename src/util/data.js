@@ -10,10 +10,27 @@ export function getCategories() {
     return JSON.parse(localStorage.getItem('business_spreadsheet_categories') ?? '[]');
 }
 
+export const exportToJSON = () =>
+    JSON.stringify({
+        categories: getCategories(),
+        transactions: getTransactions(),
+    });
+
+export function importFromJSON(json) {
+    json = JSON.parse(json);
+
+    saveCategories(json.categories);
+    saveAllTransactions(json.transactions);
+}
+
 export function removeCategory(cat) {
     cat = asID(cat);
     const all = getCategories().filter(c => asID(c[0]) != cat);
     saveCategories(all);
+
+    const transactions = getTransactions();
+    delete transactions[cat];
+    saveAllTransactions(transactions);
 
     return all;
 }
@@ -60,6 +77,17 @@ export function addTransaction(cat, money, desc) {
     saveTransactions(cat, transactions);
 
     return transactions;
+}
+
+export function renameTransactions(from, to) {
+    from = asID(from);
+    to = asID(to);
+
+    const transactions = getTransactions();
+    transactions[to] = transactions[from];
+    delete transactions[from];
+
+    saveAllTransactions(transactions);
 }
 
 export async function sumTotal(cat) {

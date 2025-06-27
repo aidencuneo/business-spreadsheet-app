@@ -9,4 +9,4 @@ const ExpandIconS = styled(Icon)`
 `;
 
 export default p =>
-    <ExpandIconS {...p} style={{ marginBottom: '5px' }}>expand_{p.type ?? 'more'}</ExpandIconS>;
+    <ExpandIconS {...p} style={{ ...p.style, marginBottom: '5px' }}>expand_{p.type ?? 'more'}</ExpandIconS>;
