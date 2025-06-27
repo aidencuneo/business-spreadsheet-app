@@ -4,7 +4,7 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel --open",
-    "build": "parcel build src/index.html --dist-dir /var/www/aidenbc.com.au/apps/business_spreadsheet",
+    "build": "parcel build --dist-dir /var/www/aidenbc.com.au/apps/business --public-url /apps/business",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

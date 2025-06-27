@@ -3,7 +3,7 @@ import Icon from './Icon';
 
 const ExpandIconS = styled(Icon)`
     vertical-align: middle;
-    padding: 0.11em 10px 0 10px;
+    padding: 0.11em 0px 0 5px;
     font-size: 24px;
     font-weight: bold;
 `;

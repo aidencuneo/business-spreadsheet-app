@@ -99,7 +99,9 @@ export default p => {
                     >
                         <div>
                             <DeleteIcon onClick={e => { e.stopPropagation(); deleteTransaction(transactions.length - i - 1); }} />
-                            <span onClick={() => renameTransaction(transactions.length - i - 1)}>{t[1] ? t[1] : 'Unnamed Transaction'}</span>
+                            <span onClick={() => renameTransaction(transactions.length - i - 1)}>
+                                {t[1] ? t[1] : 'unnamed'}
+                            </span>
                         </div>
                         <div>
                             <Money value={t[0]} style={{ paddingRight: '10px' }} />
