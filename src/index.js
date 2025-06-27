@@ -4,7 +4,7 @@ import 'material-icons/iconfont/material-icons.css';
 import ReactDOM from 'react-dom/client';
 import * as data from './util/data';
 import Category from './comp/Category';
-import Button from './comp/Button';
+import Block from './comp/Block';
 import { getRandColour } from './util/colourUtil';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -66,7 +66,7 @@ function App() {
     }
 
     const renameCat = p => {
-        const name = prompt('Enter a new name for this category:').trim();
+        const name = (prompt('Enter a new name for this category:') ?? '').trim();
         const cats = data.getCategories();
 
         if (!name || cats.find(cat => cat[0] == name))
@@ -129,16 +129,11 @@ function App() {
     const [cats, setCats] = useState(data.getCategories());
     const [total, setTotal] = useState();
 
+    // Calculate total
     data.sumTotal().then(setTotal);
 
-    // const cats = [
-    //     ['Steam', getRandColour()],
-    //     ['Donations', getRandColour()],
-    //     ['Other', getRandColour()],
-    // ];
-
     return <>
-        <Button colour="#eeeeee">Total: <Money value={total} /></Button>
+        <Block colour="#eeeeee">Total: <Money value={total} /></Block>
         {/* <TotalCategory key={i} name={cat[0]} colour={cat[1]} /> */}
 
         {cats.map((cat, i) =>
@@ -151,14 +146,15 @@ function App() {
                 onMoveDown={moveCatDown}
                 onRename={renameCat}
                 onRefresh={resetColour}
+                onUpdate={() => data.sumTotal().then(setTotal)}
             />
         )}
 
-        <Button colour="#eeeeee" onClick={addCat}>New Category</Button>
+        <Block colour="#eeeeee" onClick={addCat}>New Category</Block>
 
         <Flex>
-            <Button colour="#a9d4ff" onClick={importPrompt}>Import Data</Button>
-            <Button colour="#00ff78" onClick={exportData}>Export Data</Button>
+            <Block colour="#a9d4ff" onClick={importPrompt}>Import Data</Block>
+            <Block colour="#00ff78" onClick={exportData}>Export Data</Block>
         </Flex>
     </>;
 }

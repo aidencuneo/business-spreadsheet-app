@@ -5,7 +5,7 @@ import DeleteIcon from './DeleteIcon';
 import ExpandIcon from './ExpandIcon';
 import Money from './Money';
 import { useState } from 'react';
-import Button from './Button';
+import Block from './Block';
 import * as data from '../util/data';
 import { parseMoney, toAUD } from '../util/money';
 import MoveIcon from './MoveIcon';
@@ -27,6 +27,9 @@ export default p => {
 
         const transactions = data.addTransaction(p.name, money);
         setTransactions(transactions);
+
+        // Update outer element
+        p.onUpdate();
     }
 
     const deleteTransaction = i => {
@@ -37,6 +40,9 @@ export default p => {
 
         setTransactions(filtered);
         data.saveTransactions(p.name, filtered);
+
+        // Update outer element
+        p.onUpdate();
     }
 
     const renameTransaction = i => {
@@ -50,6 +56,9 @@ export default p => {
 
         setTransactions(transactions);
         data.saveTransactions(p.name, transactions);
+
+        // Update outer element
+        p.onUpdate();
     }
 
     const colour = getLightOrDark(p.colour.substring(1), '#eeeeee', '#121212');
@@ -80,13 +89,13 @@ export default p => {
 
         {opened &&
             <>
-                <Button
+                <Block
                     onClick={addTransaction}
                     style={{ marginLeft: '36px' }}
                     colour="#eeeeee"
                 >
                     New Transaction
-                </Button>
+                </Block>
 
                 {[...transactions].reverse().map((t, i) =>
                     <CategoryWrapper
