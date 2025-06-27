@@ -9,5 +9,5 @@ const DeleteIconS = styled(Icon)`
 `;
 
 export default function DeleteIcon(p) {
-    return <DeleteIconS style={{ marginBottom: '5px' }}>delete</DeleteIconS>
+    return <DeleteIconS {...p} style={{ marginBottom: '5px' }}>delete</DeleteIconS>
 }

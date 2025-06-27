@@ -6,8 +6,9 @@ const ExpandIconS = styled(Icon)`
     padding-top: 0.11em;
     padding-right: 10px;
     font-size: 24px;
+    font-weight: bold;
 `;
 
 export default function ExpandIcon(p) {
-    return <ExpandIconS style={{ marginBottom: '5px' }}>keyboard_arrow_down</ExpandIconS>
+    return <ExpandIconS {...p} style={{ marginBottom: '5px' }}>expand_{p.type ?? 'more'}</ExpandIconS>
 }

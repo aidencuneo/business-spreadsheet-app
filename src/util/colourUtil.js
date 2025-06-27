@@ -43,6 +43,8 @@ export const getRandHex = length => {
     return h;
 }
 
+export const getRandColour = () => '#' + getRandHex(6);
+
 export const getRandGrey = () => {
     let h = hexDigits[Math.floor(Math.random() * 16)] + hexDigits[Math.floor(Math.random() * 16)];
     return h + h + h;

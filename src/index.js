@@ -4,25 +4,46 @@ import 'material-icons/iconfont/material-icons.css';
 import ReactDOM from 'react-dom/client';
 import * as data from './util/data';
 import Category from './comp/Category';
-import { getRandHex } from './util/colourUtil';
+import Button from './comp/Button';
+import { getRandColour } from './util/colourUtil';
+import { useState } from 'react';
 
 function App() {
-    // const cats = data.getCategories();
-    const cats = [
-        ['Steam', '#' + getRandHex(6)],
-        ['Donations', '#' + getRandHex(6)],
-        ['Other', '#' + getRandHex(6)],
-    ];
+    function addCat() {
+        const name = prompt('Enter a category name:');
 
-    return (
-        <>
-            {cats.map((cat, i) =>
-                <Category key={i} name={cat[0]} colour={cat[1]} />
-            )}
+        if (!name)
+            return;
 
-            <Button colour="#eeeeee">New Category</Button>
-        </>
-    );
+        const cats = data.getCategories();
+        cats.push([name, getRandColour()]);
+        data.saveCategories(cats);
+        setCats(cats);
+    }
+
+    function deleteCat(p) {
+        const cats = data.removeCategory(p.name);
+        setCats(cats);
+    }
+
+    const [cats, setCats] = useState(data.getCategories());
+
+    // const cats = [
+    //     ['Steam', getRandColour()],
+    //     ['Donations', getRandColour()],
+    //     ['Other', getRandColour()],
+    // ];
+
+    return <>
+        <Button colour="#eeeeee">Total: $5</Button>
+        {/* <TotalCategory key={i} name={cat[0]} colour={cat[1]} /> */}
+
+        {cats.map((cat, i) =>
+            <Category key={i} name={cat[0]} colour={cat[1]} onDelete={deleteCat} />
+        )}
+
+        <Button colour="#eeeeee" onClick={addCat}>New Category</Button>
+    </>;
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
