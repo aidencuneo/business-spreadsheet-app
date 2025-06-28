@@ -36,36 +36,6 @@ function App() {
         setCats(cats);
     }
 
-    const moveCatUp = p => {
-        const cats = data.getCategories();
-        const i = cats.findIndex(cat => cat[0] == p.name);
-
-        if (i == 0)
-            return;
-
-        const bot = cats[i];
-        cats[i] = cats[i - 1];
-        cats[i - 1] = bot;
-
-        data.saveCategories(cats);
-        setCats(cats);
-    }
-
-    const moveCatDown = p => {
-        const cats = data.getCategories();
-        const i = cats.findIndex(cat => cat[0] == p.name);
-
-        if (i == cats.length - 1)
-            return;
-
-        const top = cats[i];
-        cats[i] = cats[i + 1];
-        cats[i + 1] = top;
-
-        data.saveCategories(cats);
-        setCats(cats);
-    }
-
     const selectNearestCat = y => {
         let i;
         for (i = 0; i < catYLevels.length; ++i)
@@ -222,8 +192,6 @@ function App() {
                 name={cat[0]}
                 colour={cat[1]}
                 onDelete={deleteCat}
-                // onMoveUp={moveCatUp}
-                // onMoveDown={moveCatDown}
                 onDragStart={onDragStart}
                 onRename={renameCat}
                 onRefresh={resetColour}
