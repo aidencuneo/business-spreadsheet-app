@@ -9,6 +9,7 @@ import { getRandColour } from './util/colourUtil';
 import { useState } from 'react';
 import styled from 'styled-components';
 import Money from './comp/Money';
+import DragLine from './comp/DragLine';
 
 const Flex = styled.div`
     display: flex;
@@ -63,6 +64,77 @@ function App() {
 
         data.saveCategories(cats);
         setCats(cats);
+    }
+
+    const selectNearestCat = y => {
+        let i;
+        for (i = 0; i < catYLevels.length; ++i)
+            if (y < catYLevels[i])
+                break;
+
+        // Select the closer of the two
+        if (y - catYLevels[i - 1] < catYLevels[i] - y)
+            --i;
+
+        if (i == catYLevels.length)
+            --i;
+
+        if (i == draggingCatIndex || i == draggingCatIndex + 1)
+            setDragLineY(-1);
+        else
+            setDragLineY(catYLevels[i]);
+
+        return i;
+    }
+
+    const onDragStart = e => {
+        catYLevels = [];
+        const draggingCatElem = e.target.parentElement.parentElement;
+
+        const catElems = [...draggingCatElem.parentElement.children].filter(
+            elem => elem.classList.contains('category'));
+
+        draggingCatIndex = catElems.indexOf(draggingCatElem);
+
+        for (let i = 0; i < catElems.length; ++i)
+            catYLevels.push(catElems[i].getBoundingClientRect().y);
+
+        const lastCat = catElems[catElems.length - 1].getBoundingClientRect();
+        catYLevels.push(lastCat.y + lastCat.height);
+
+        console.log(catYLevels);
+        // catYLevels = 
+        console.log(e.clientY);
+        selectNearestCat(e.clientY);
+    }
+
+    const onDrag = e => {
+        if (draggingCatIndex === undefined)
+            return;
+
+        const i = selectNearestCat(e.clientY);
+        console.log(dragLineY);
+    }
+
+    const onDragEnd = e => {
+        if (draggingCatIndex === undefined)
+            return;
+
+        // Get final position and remove drag line
+        const i = selectNearestCat(e.clientY);
+        setDragLineY(-1);
+
+        // Insert into final position
+        const cats = data.getCategories();
+        const draggingCat = cats[draggingCatIndex];
+        cats.splice(draggingCatIndex, 1);
+        cats.splice(i, 0, draggingCat);
+
+        data.saveCategories(cats);
+        setCats(cats);
+
+        // Stop dragging
+        draggingCatIndex = undefined;
     }
 
     const renameCat = p => {
@@ -128,6 +200,14 @@ function App() {
 
     const [cats, setCats] = useState(data.getCategories());
     const [total, setTotal] = useState();
+    const [dragLineY, setDragLineY] = useState(-1);
+
+    let draggingCatIndex;
+    let catYLevels = [];
+
+    // Add whole document listeners
+    document.body.addEventListener('mousemove', onDrag);
+    document.body.addEventListener('mouseup', onDragEnd);
 
     // Calculate total
     data.sumTotal().then(setTotal);
@@ -142,13 +222,16 @@ function App() {
                 name={cat[0]}
                 colour={cat[1]}
                 onDelete={deleteCat}
-                onMoveUp={moveCatUp}
-                onMoveDown={moveCatDown}
+                // onMoveUp={moveCatUp}
+                // onMoveDown={moveCatDown}
+                onDragStart={onDragStart}
                 onRename={renameCat}
                 onRefresh={resetColour}
                 onUpdate={() => data.sumTotal().then(setTotal)}
             />
         )}
+
+        <DragLine y={dragLineY} />
 
         <Block colour="#eeeeee" onClick={addCat}>New Category</Block>
 

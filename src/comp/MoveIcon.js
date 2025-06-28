@@ -9,4 +9,6 @@ const MoveIconS = styled(Icon)`
 `;
 
 export default p =>
-    <MoveIconS {...p} style={{ ...p.style, marginBottom: '5px' }}>arrow_{p.type ?? 'down'}ward</MoveIconS>;
+    <MoveIconS {...p} style={{ ...p.style, marginBottom: '5px' }}>
+        {p.type == 'drag' ? 'drag_indicator' : `arrow_${p.type ?? 'down'}ward`}
+    </MoveIconS>;

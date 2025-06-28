@@ -71,13 +71,15 @@ export default p => {
 
     return <>
         <CategoryWrapper
+            className="category"
             style={{ background: p.colour, color: colour }}
             onClick={() => setOpened(!opened)}
         >
             <div>
+                <MoveIcon onMouseDown={e => p.onDragStart(e)} onClick={e => e.stopPropagation()} type="drag" />
                 <DeleteIcon onClick={e => { e.stopPropagation(); p.onDelete(p); }} />
-                <MoveIcon onClick={e => { e.stopPropagation(); p.onMoveUp(p) }} type="up" />
-                <MoveIcon onClick={e => { e.stopPropagation(); p.onMoveDown(p) }} type="down" />
+                {/* <MoveIcon onClick={e => { e.stopPropagation(); p.onMoveUp(p) }} type="up" />
+                <MoveIcon onClick={e => { e.stopPropagation(); p.onMoveDown(p) }} type="down" /> */}
                 <RefreshIcon onClick={e => { e.stopPropagation(); p.onRefresh(p); }} style={{ paddingRight: '15px' }} />
                 <span onClick={e => { e.stopPropagation(); p.onRename(p); }}>{p.name}</span>
             </div>
